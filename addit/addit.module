@@ -1,0 +1,67 @@
+<?php
+
+// add the menu item
+function addit_menu() {
+    $items['addit'] = array(
+        'title'           => t('Add it!'),
+        'page callback'   => 'addit_render_form',
+        'access callback' => TRUE,
+        'type'            => MENU_NORMAL_ITEM,
+        'menu_name'       => 'main-menu',
+    );
+    return $items;
+}
+
+// Page callback - returns the form
+function addit_render_form() {
+    return drupal_get_form('addit_form');
+}
+
+// build the form
+function addit_form($form_state) {
+
+    // add js file to make pretty
+    $form['#attached']['js'] = array(
+      drupal_get_path('module', 'addit') . '/addit.js',
+    );
+
+    $form['addit_input1'] = array(
+        '#type' => 'textfield',
+        '#title' => t('First Number'),
+        '#size' => 20,
+        '#maxlength' => 19,
+        '#name' => 'addend1',
+    );
+
+    $form['addit_input2'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Second Number'),
+        '#size' => 20,
+        '#maxlength' => 19,
+        '#name' => 'addend2',
+    );
+
+    $form['addit_submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Add It!'),
+    );
+    return $form;
+}
+
+// These only work if there's no JS.
+
+// validate the inputs (roughly)
+function addit_form_validate($form, &$form_state) {
+    if (!is_numeric($form_state['input']['addend1'])) {
+        form_set_error('addit_input1', t('Warning: non-numeric used on Input #1'));
+    };
+    if (!is_numeric($form_state['input']['addend2'])) {
+        form_set_error('addit_input2', t('Warning: non-numeric used on Input #2'));
+    };
+}
+
+// return a result
+function addit_form_submit($form, &$form_state) {
+    $addit_result = $form_state['input']['addend1'] + $form_state['input']['addend2'];
+    drupal_set_message(t('The sum is: ' . $addit_result));
+}

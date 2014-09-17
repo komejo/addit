@@ -1,0 +1,3 @@
+core = 7.x
+name = Addit Module
+description = "A simple addition tool"
